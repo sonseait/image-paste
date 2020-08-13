@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Input } from "./components/Input";
+
+const renderItem = (item) => {
+  if (item.type === "IMAGE") {
+    return <img src={item.data} />;
+  }
+  return item.data;
+};
 
 function App() {
+  const [messages, setMessages] = React.useState([]);
+
+  const onSend = React.useCallback(
+    (_messages) => {
+      const newMessages = _messages.reverse().concat(messages);
+      setMessages(newMessages);
+    },
+    [messages]
+  );
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Input onSend={onSend} />
+      <div style={{ marginTop: 20 }}>
+        {messages.map((m) => (
+          <div key={m.id} style={{ margin: "10px 0" }}>
+            {renderItem(m)}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
